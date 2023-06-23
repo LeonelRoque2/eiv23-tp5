@@ -1,7 +1,7 @@
 #ifndef COMUNICADOR_SERIE_H
 #define COMUNIADOR_SERIE_H
 #include <stdbool.h>
-
+#include <stdint.h>
 /**
  * @brief Inicializa el puerto USART
  * 
