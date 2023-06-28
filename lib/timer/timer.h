@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-enum flancos{
+typedef enum flancos{
     FLANCO_ASCENDENTE,
     FLANCO_DESCENDENTE
-}; 
+}flancos; 
 
 /**
  * @brief Inicializ el timer
@@ -20,7 +20,7 @@ void TIM4_init ();
  * @param flanco Variable que indica si capturo por flanco ascendente o descendente
  * @return Valor capturado
  */
-uint32_t TIM4_detectarFlanco (bool flanco);
+uint32_t TIM4_detectarFlanco (flancos flanco);
 
 /**
  * @brief Genera un pulso de la duracion especificada
