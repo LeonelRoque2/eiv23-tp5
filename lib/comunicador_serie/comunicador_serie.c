@@ -39,8 +39,16 @@ bool USART_write_byte (uint8_t c) {
         USART1->DR = c;                                                         //Escribo un caracter
         escritura_exitosa = 1;
     }
-    return escritura_exitosa;                                                             
+    return escritura_exitosa;                   
+                                              
 }
+void esperarYTransmitir(char c){
+    bool transmision = 0;
+    while (!transmision) {
+        transmision = USART_write_byte (c);
+    };
+}
+
 
 void USART_deInit () {
     while(~(USART1->SR & (USART_SR_TC_Msk)));                  //Espero a que TC = 1 en SR para asegurarse que finalizo la transmision

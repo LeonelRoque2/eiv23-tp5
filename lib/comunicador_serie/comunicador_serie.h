@@ -27,6 +27,14 @@ bool USART_read (uint32_t *palabra);
 bool USART_write_byte (uint8_t c);
 
 /**
+ * @brief Escribe un caracter por pantalla y se asegura de que haya sido transmitido correctamente
+ * 
+ * @param c Caracter a escribir
+ */
+
+void esperarYTransmitir(char c);
+
+/**
  * @brief Desconfigura el puerto USART
  * 
  */

@@ -1,7 +1,6 @@
 #ifndef TIMER_H
 #define TIMER_H
 #include <stdint.h>
-#include <stdbool.h>
 
 typedef enum flancos{
     FLANCO_ASCENDENTE,

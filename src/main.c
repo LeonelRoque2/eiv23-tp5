@@ -1,49 +1,68 @@
-#include <soporte_placa.h>
 #include "comunicador_serie.h"
 #include "timer.h"
 #include "stm32f1xx.h"
+#include <interprete.h>
+#include <stdbool.h>
 
 void Clock_config ();
 
-static void esperarYTransmitir(char c){
-    bool transmision = 0;
-    while (!transmision) {
-        transmision = USART_write_byte (c);
-    };
-}
+static char const * const fueraDeRango = "OUT";
 
 static void obtenerDigitosATransmitir (uint32_t numero, char digitos[]) {
-    int i = 0;
-    for(i=0;i<10;i++) {
+    for(int i=0;i<10;i++) {
         digitos[i] = (numero % 10) + '0';
         numero = numero / 10;
     }
 }
 
+static void transmitirOutOfRange () {
+    unsigned i = 0;
+        while (fueraDeRango[i] != 0) {
+            esperarYTransmitir (fueraDeRango[i]);
+            i++;
+        }
+}
+
 static void escribirPorPantalla (uint32_t numero, char digitos []) {
     obtenerDigitosATransmitir(numero,digitos);
+    bool noEsCero = 0;
     for (int i=0;i<10;i++) {
+        if (digitos[9-i] != '0') {
+            noEsCero = 1;
+        }
+        if (noEsCero) {
         esperarYTransmitir (digitos[9-i]);
+        }
     }
+}
+
+void Comando_dist(void){
+    static char digitosATransmitir[10];
+    TIM4_generaPulso(2);
+    uint32_t valor1 = TIM4_detectarFlanco (FLANCO_ASCENDENTE);
+    uint32_t valor2 = TIM4_detectarFlanco (FLANCO_DESCENDENTE);
+    uint32_t ancho_pulso = (valor2-valor1);
+    if (ancho_pulso > 4000) {
+        transmitirOutOfRange();
+    }
+    else {
+        escribirPorPantalla(ancho_pulso,digitosATransmitir);
+    }
+    esperarYTransmitir('\r');
+    esperarYTransmitir('\n');
 }
 
 int main(void){
     uint32_t caracter;
-    uint32_t valor1,valor2,ancho_pulso;
-    char digitosATransmitir[10];
     Clock_config ();
     USART_init(9600);
     TIM4_init();
+    Interprete_init();
     for(;;){
         bool read = USART_read(&caracter);
         if(read) {
-            USART_write_byte (caracter);
-            TIM4_generaPulso(2);
-            valor1 = TIM4_detectarFlanco (FLANCO_ASCENDENTE);
-            valor2 = TIM4_detectarFlanco (FLANCO_DESCENDENTE);
-            ancho_pulso = (valor2-valor1);
-            escribirPorPantalla(ancho_pulso,digitosATransmitir);
-            esperarYTransmitir('\n');
+            esperarYTransmitir(caracter);
+            Interprete_procesa(caracter);
         }
     }
     return 0;
@@ -63,17 +82,3 @@ void Clock_config () {
 }
    
 
-/*
-for(;;){
-        bool read = USART_read(&caracter);
-    if(read && caracter == 'M') {
-        (void) USART_write_byte (caracter);
-        TIM4_generaPulso(1);
-        valor1 = TIM4_detectarFlanco (FLANCO_ASCENDENTE);
-        valor2 = TIM4_detectarFlanco (FLANCO_DESCENDENTE);
-        medida = (valor2-valor1)/4
-        USART_writeByte ('\n');
-        USART_writeByte (medida);
-    }
-        }
-*/

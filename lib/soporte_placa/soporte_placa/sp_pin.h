@@ -65,7 +65,9 @@ typedef enum SP_Pin_Modo{
     SP_PIN_ENTRADA_PULLUP,   // Entrada con resistencia pull-up interna
     SP_PIN_ENTRADA_PULLDN,   // Entrada con resistencia pull-down interna
     SP_PIN_SALIDA,           // Salida push-pull
-    SP_PIN_SALIDA_OPEN_DRAIN // Salida con drenador abierto
+    SP_PIN_SALIDA_OPEN_DRAIN, // Salida con drenador abierto
+    SP_PIN_SALIDA_AF
+
 }SP_Pin_Modo;
 
 /**

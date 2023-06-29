@@ -137,7 +137,12 @@ void SP_Pin_setModo(SP_HPin hPin,SP_Pin_Modo modo){
          * Bits[1:0]: Modo E/S, 10 es modo salida con frec. máxima de 2MHz
          * Bits[3:2]: Configuración de salida, 01 es salida de propósito general open drain
          */
-        SALIDA_2MHz_OPEN_DRAIN = 0b0110
+        SALIDA_2MHz_OPEN_DRAIN = 0b0110,
+        /**
+         * Bits[1:0]: Modo E/S, 10 es modo salida con rec. máxima de 2 MHz
+         * Bits[3:2]: Configuracion de salida, 10 es salida alternativa push-pull
+         */
+        SALIDA_2MHz_ALTERNATIVA = 0b1010
     };
     if(hPin >= SP_NUM_PINES) return; // Si el pin esa fuera del limite corto a ejecucion
     Pin const *pin = pinDeHandle(hPin); //Obtengo pueto y numero
@@ -158,6 +163,8 @@ void SP_Pin_setModo(SP_HPin hPin,SP_Pin_Modo modo){
         config_modo(pin,SALIDA_2MHz);
     break;case SP_PIN_SALIDA_OPEN_DRAIN:
         config_modo(pin,SALIDA_2MHz_OPEN_DRAIN);
+    break;case SP_PIN_SALIDA_AF:
+        config_modo(pin,SALIDA_2MHz_ALTERNATIVA);
     break;default:
     // Debiera generar un error
     break;

@@ -27,7 +27,7 @@ static void TIM4_reset () {
 }
     
 static void pinConfig (void) {
-    SP_Pin_setModo(SP_PB6,SP_PIN_SALIDA);
+    SP_Pin_setModo(SP_PB6,SP_PIN_SALIDA_AF);
     SP_Pin_setModo(SP_PB7,SP_PIN_ENTRADA);
 }
 
@@ -75,15 +75,11 @@ static void TIM4_setCCR1(uint16_t valor){
     TIM4->CCR1 = valor;
 }
 static void TIM4_resetCounterAndUpdate(void){
-    TIM4->EGR |= TIM_EGR_UG;
-}
-static void TIM4_esperaFinReset(void){
-    while(TIM4->EGR & TIM_EGR_UG);
+    TIM4->EGR = TIM_EGR_UG;
 }
 void TIM4_generaPulso (uint32_t ciclos){
     TIM4_resetCounterAndUpdate(); // reinicia contador y prescaler
     TIM4_setOC1M(OCM_FORCE_ACTIVE);
-    TIM4_esperaFinReset(); // Asegura que se haya reiniciado el contador
     TIM4_setCCR1(TIM4->CNT + ciclos);
     TIM4_setOC1M(OCM_INACTIVE_ON_MATCH);
 }

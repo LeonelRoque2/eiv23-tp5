@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "comunicador_serie.h": "c"
+        "comunicador_serie.h": "c",
+        "sp_pin.h": "c",
+        "timer.h": "c"
     }
 }
